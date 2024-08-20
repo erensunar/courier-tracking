@@ -4,9 +4,13 @@ import com.example.courier_tracking.model.Location;
 import com.example.courier_tracking.service.LocationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/locations")
@@ -16,7 +20,7 @@ public class LocationController {
     private LocationService locationService;
 
     @PostMapping
-    public ResponseEntity<Location> saveLocation(@RequestBody Location location) {
+    public ResponseEntity<Location> saveLocation(@Valid @RequestBody Location location) {
         try {
             Location savedLocation = locationService.saveLocation(location);
             return ResponseEntity.ok(savedLocation);
@@ -31,5 +35,17 @@ public class LocationController {
     public ResponseEntity<List<Location>> getLocationsByCourierId(@PathVariable Long courierId) {
         List<Location> locations = locationService.getLocationsByCourierId(courierId);
         return ResponseEntity.ok(locations);
+    }
+
+    // Validation hatalarını yakalamak için eklenen exception handler
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((org.springframework.validation.FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return ResponseEntity.badRequest().body(errors);
     }
 }

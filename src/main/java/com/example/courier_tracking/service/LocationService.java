@@ -4,12 +4,14 @@ import com.example.courier_tracking.model.Courier;
 import com.example.courier_tracking.model.Location;
 import com.example.courier_tracking.repository.CourierRepository;
 import com.example.courier_tracking.repository.LocationRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 import java.util.Optional;
-
+@Validated
 @Service
 public class LocationService {
 
@@ -19,7 +21,7 @@ public class LocationService {
     @Autowired
     private CourierRepository courierRepository;
 
-    public Location saveLocation(Location location) {
+    public Location saveLocation(@Valid Location location) {
         // Öncelikle courier id ile veritabanında böyle bir kayıt var mı kontrol edelim.
         Long courierId = location.getCourier().getId();
         Optional<Courier> courier = courierRepository.findById(courierId);

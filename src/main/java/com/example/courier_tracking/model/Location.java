@@ -1,10 +1,13 @@
 package com.example.courier_tracking.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import com.example.courier_tracking.validation.ValidLatitude;
+import com.example.courier_tracking.validation.ValidLongitude;
+
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "locations")
 public class Location {
 
     @Id
@@ -13,11 +16,16 @@ public class Location {
 
     @ManyToOne
     @JoinColumn(name = "courier_id", nullable = false)
+    @NotNull(message = "Courier cannot be null")
     private Courier courier;
 
+    @ValidLatitude
+    @NotNull(message = "Latitude cannot be null")
     @Column(nullable = false)
     private Double latitude;
 
+    @ValidLongitude
+    @NotNull(message = "Longitude cannot be null")
     @Column(nullable = false)
     private Double longitude;
 
