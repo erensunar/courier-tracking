@@ -14,34 +14,29 @@ public class CourierService {
     @Autowired
     private CourierRepository courierRepository;
 
-    // Tüm kuryeleri getir
     public List<Courier> getAllCouriers() {
         return courierRepository.findAll();
     }
 
-    // ID ile tek bir kurye getir
     public Optional<Courier> getCourierById(Long id) {
         return courierRepository.findById(id);
     }
 
-    // Yeni kurye oluştur
     public Courier createCourier(Courier courier) {
         return courierRepository.save(courier);
     }
 
-    // Mevcut kuryeyi güncelle
     public Courier updateCourier(Long id, Courier courierDetails) {
         Courier courier = courierRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Courier not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Courier not found with id: " + id));
 
-        // Kurye bilgilerini güncelle
         courier.setName(courierDetails.getName());
-        courier.setCreatedAt(courierDetails.getCreatedAt());
+        // Eğer courierDetails'dan bir tarih alacaksanız, bu şekilde kullanabilirsiniz
+        courier.setCreatedAt(courierDetails.getCreatedAt()); // Örnek olarak createdAt set edilmesi
 
         return courierRepository.save(courier);
     }
 
-    // Kurye sil
     public void deleteCourier(Long id) {
         courierRepository.deleteById(id);
     }
