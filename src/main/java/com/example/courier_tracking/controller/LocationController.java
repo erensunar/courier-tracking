@@ -1,6 +1,7 @@
 package com.example.courier_tracking.controller;
 
 import com.example.courier_tracking.model.Location;
+import com.example.courier_tracking.service.CourierTrackingService;
 import com.example.courier_tracking.service.LocationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,11 +19,14 @@ public class LocationController {
 
     @Autowired
     private LocationService locationService;
+    @Autowired
+    private CourierTrackingService courierTrackingService;
 
     @PostMapping
     public ResponseEntity<Location> saveLocation(@Valid @RequestBody Location location) {
         try {
             Location savedLocation = locationService.saveLocation(location);
+            courierTrackingService.checkAndLogEntry(location.getCourier(), location.getLatitude(), location.getLongitude());
             return ResponseEntity.ok(savedLocation);
         } catch (IllegalArgumentException e) {
             // Hata varsa logla ve 404 döndür

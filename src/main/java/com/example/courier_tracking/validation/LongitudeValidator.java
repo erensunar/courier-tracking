@@ -7,8 +7,6 @@ public class LongitudeValidator implements ConstraintValidator<ValidLongitude, D
 
     @Override
     public boolean isValid(Double longitude, ConstraintValidatorContext context) {
-        System.out.println("LongitudeValidator is triggered with value: " + longitude); // Bu satırı ekleyin
-
         return longitude != null && longitude >= -180 && longitude <= 180;
     }
 }

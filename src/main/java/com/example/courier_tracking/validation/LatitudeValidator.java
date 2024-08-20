@@ -11,7 +11,6 @@ public class LatitudeValidator implements ConstraintValidator<ValidLatitude, Dou
 
     @Override
     public boolean isValid(Double latitude, ConstraintValidatorContext context) {
-        System.out.println("LatitudeValidator is triggered with value: " + latitude);
         return latitude != null && latitude >= -90 && latitude <= 90;
     }
 }
