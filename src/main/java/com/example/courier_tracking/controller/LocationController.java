@@ -52,4 +52,11 @@ public class LocationController {
         });
         return ResponseEntity.badRequest().body(errors);
     }
+
+    @GetMapping("/last-locations")
+    public ResponseEntity<List<Location>> getLastLocations() {
+        List<Location> lastLocations = locationService.getLastLocationsForAllCouriers();
+        System.out.println(lastLocations);
+        return ResponseEntity.ok(lastLocations);
+    }
 }

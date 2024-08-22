@@ -23,7 +23,7 @@ public class CourierTrackingService {
 
     public void checkAndLogEntry(Courier courier, double lat, double lng) {
         System.out.println("Checking entry for courier: " + courier.getName());
-        for (Store store : storeService.getStores()) {
+        for (Store store : storeService.getAllStores()) {
             double distance = LocationUtils.calculateDistance(lat, lng, store.getLat(), store.getLng());
             if (distance <= 100) {
                 System.out.println("Courier is within 100 meters of store: " + store.getName());

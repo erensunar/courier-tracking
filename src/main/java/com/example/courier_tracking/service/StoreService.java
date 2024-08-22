@@ -16,22 +16,22 @@ import java.util.List;
 @Service
 public class StoreService {
 
-    @Autowired
-    private StoreRepository storeRepository;
+    private final StoreRepository storeRepository;
 
-    private List<Store> stores;
+    @Autowired
+    public StoreService(StoreRepository storeRepository) {
+        this.storeRepository = storeRepository;
+    }
 
     @PostConstruct
     public void loadStores() {
         ObjectMapper mapper = new ObjectMapper();
         try {
             InputStream inputStream = new ClassPathResource("stores.json").getInputStream();
-            stores = mapper.readValue(inputStream, new TypeReference<List<Store>>() {});
+            List<Store> stores = mapper.readValue(inputStream, new TypeReference<List<Store>>() {});
 
-            // Store nesnelerini veritabanına kaydetme
-            for (Store store : stores) {
-                storeRepository.save(store);
-            }
+            // Veritabanına store nesnelerini kaydet
+            storeRepository.saveAll(stores);
 
             System.out.println("Stores loaded and saved: " + stores.size());
         } catch (IOException e) {
@@ -39,8 +39,8 @@ public class StoreService {
         }
     }
 
-    public List<Store> getStores() {
-        return stores;
+    public List<Store> getAllStores() {
+        return storeRepository.findAll();
     }
 
     public Store getStoreById(Long id) {

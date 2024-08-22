@@ -11,6 +11,8 @@ import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 @Validated
 @Service
 public class LocationService {
@@ -36,5 +38,12 @@ public class LocationService {
 
     public List<Location> getLocationsByCourierId(Long courierId) {
         return locationRepository.findByCourierId(courierId);
+    }
+    public List<Location> getLastLocationsForAllCouriers() {
+        // Tüm kuryelerin son konumlarını getirir.
+        List<Courier> couriers = courierRepository.findAll();
+        return couriers.stream()
+                .map(courier -> locationRepository.findTopByCourierOrderByTimestampDesc(courier))
+                .collect(Collectors.toList());
     }
 }
