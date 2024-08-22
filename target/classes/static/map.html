@@ -64,6 +64,26 @@
                     .bindPopup('Courier ID: ' + location.courier.id);
             });
         });
+    // Bir kuryenin geçmiş konumlarını çizmek için fonksiyon
+    function drawCourierPath(courierId) {
+        fetch(`/api/locations/courier/${courierId}`)
+            .then(response => response.json())
+            .then(data => {
+                // Eğer veri varsa polyline çizimi için koordinatları hazırlayın
+                if (data.length > 0) {
+                    let latlngs = data.map(location => [location.latitude, location.longitude]);
+
+                    // Polyline oluşturup haritaya ekleyin
+                    L.polyline(latlngs, { color: 'blue' }).addTo(map)
+                        .bindPopup('Courier Path');
+                }
+            })
+            .catch(error => console.log('Error fetching courier path:', error));
+    }
+
+    // Örneğin, 1 numaralı kuryenin yolunu çizmek için bu fonksiyonu çağırın
+    drawCourierPath(5);
+
 </script>
 
 </body>
