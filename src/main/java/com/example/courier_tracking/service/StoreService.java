@@ -12,35 +12,48 @@ import jakarta.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class StoreService {
 
-    private final StoreRepository storeRepository;
-
     @Autowired
-    public StoreService(StoreRepository storeRepository) {
-        this.storeRepository = storeRepository;
-    }
+    private StoreRepository storeRepository;
+
+    private List<Store> stores;
 
     @PostConstruct
     public void loadStores() {
         ObjectMapper mapper = new ObjectMapper();
         try {
             InputStream inputStream = new ClassPathResource("stores.json").getInputStream();
-            List<Store> stores = mapper.readValue(inputStream, new TypeReference<List<Store>>() {});
+            List<Store> storesFromFile = mapper.readValue(inputStream, new TypeReference<List<Store>>() {});
 
-            // Veritabanına store nesnelerini kaydet
-            storeRepository.saveAll(stores);
+            // Veritabanında mağaza olup olmadığını kontrol edin
+            for (Store store : storesFromFile) {
+                Optional<Store> existingStore = storeRepository.findByNameAndLatAndLng(store.getName(), store.getLat(), store.getLng());
 
-            System.out.println("Stores loaded and saved: " + stores.size());
+                if (!existingStore.isPresent()) {
+                    storeRepository.save(store);
+                    System.out.println("Store saved: " + store.getName());
+                } else {
+                    System.out.println("Store already exists: " + store.getName());
+                }
+            }
+
         } catch (IOException e) {
+            System.err.println("Error loading stores: " + e.getMessage());
+            e.printStackTrace();
+        } catch (Exception e) {
+            System.err.println("General error in loadStores: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
-    public List<Store> getAllStores() {
-        return storeRepository.findAll();
+
+
+    public List<Store> getStores() {
+        return stores;
     }
 
     public Store getStoreById(Long id) {

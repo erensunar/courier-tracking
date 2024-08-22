@@ -19,7 +19,7 @@ public class StoreController {
     // Tüm mağazaları getiren endpoint
     @GetMapping("/stores")
     public ResponseEntity<List<Store>> getAllStores() {
-        List<Store> stores = storeService.getAllStores();
+        List<Store> stores = storeService.getStores();
         System.out.println(stores);
         return ResponseEntity.ok(stores);
     }
