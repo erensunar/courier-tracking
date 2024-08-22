@@ -59,4 +59,10 @@ public class LocationController {
         System.out.println(lastLocations);
         return ResponseEntity.ok(lastLocations);
     }
+
+    @GetMapping("/courier/{courierId}/distance")
+    public ResponseEntity<Double> getTotalTravelDistance(@PathVariable Long courierId) {
+        Double totalDistance = locationService.getTotalTravelDistance(courierId);
+        return ResponseEntity.ok(totalDistance);
+    }
 }

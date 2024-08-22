@@ -40,6 +40,7 @@ public class StoreService {
                     System.out.println("Store already exists: " + store.getName());
                 }
             }
+            stores = storeRepository.findAll();
 
         } catch (IOException e) {
             System.err.println("Error loading stores: " + e.getMessage());

@@ -15,4 +15,5 @@ public interface LocationRepository extends JpaRepository<Location, Long> {
 
     // Belirli bir kuryenin en son konumunu bulur
     Location findTopByCourierOrderByTimestampDesc(Courier courier);
+    List<Location> findByCourierIdOrderByTimestampAsc(Long courierId);
 }
